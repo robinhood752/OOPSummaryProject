@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OOPSummaryProject
 {
@@ -10,18 +6,57 @@ namespace OOPSummaryProject
     {
         static void Main(string[] args)
         {
-            Customer customer1 = new Customer(123, "Michael Babich", "0558862926");
-            Customer customer2 = new Customer(1234, "Jonh Doe", "0000000000");
+            try
+            {
+                Customer customer1 = new Customer(123, "Michael Babich", "0558862926");
+                Customer customer2 = new Customer(1234, "Jonh Doe", "0000000000");
 
-            Bank bank = new Bank("Some Bank", "Some Address");
+                Account account1 = new Account(customer1, 15000);
+                Account account2 = new Account(customer2, 17500);
+                Account account3 = new Account(customer1, 20000);
 
-            bank.AddNewCustomer(customer1);
+                Bank bank = new Bank("Some Bank", "Some Address");
 
-            bank.OpenNewAccount(new Account(customer1, 15000), customer1);
-            bank.OpenNewAccount(new Account(customer2, 17500), customer2);
-            bank.OpenNewAccount(new Account(customer1, 20000), customer1);
+                bank.AddNewCustomer(customer1);
 
-            bank.Withdraw()
+                bank.OpenNewAccount(account1, customer1);
+                bank.OpenNewAccount(account2, customer2);
+                bank.OpenNewAccount(account3, customer1);
+
+                bank.Deposit(account1, 10000);
+                bank.Deposit(account2, 15000);
+                bank.Deposit(account3, 20000);
+
+                bank.Withdraw(account2, 20000);
+
+                bank.CloseAccount(account3, customer1);
+
+                Console.WriteLine(bank.XMLSerialize());
+            }
+            catch (AccountAlreadyExistException)
+            {
+                Console.WriteLine("AccountAlreadyExistException");
+            }
+            catch (AccountNotFoundException)
+            {
+                Console.WriteLine("AccountNotFoundException");
+            }
+            catch (BalanceException)
+            {
+                Console.WriteLine("BalanceException");
+            }
+            catch (CustomerAlreadyExistException)
+            {
+                Console.WriteLine("CustomerAlreadyExistException");
+            }
+            catch (CustomerNotFountException) 
+            {
+                Console.WriteLine("CustomerNotFountException");
+            }
+            catch (NotSameCustomerException)
+            {
+                Console.WriteLine("NotSameCustomerException");
+            }
         }
     }
 }

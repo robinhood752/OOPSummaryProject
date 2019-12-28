@@ -5,8 +5,6 @@ namespace OOPSummaryProject
 {
     class Bank : IBank
     {
-
-
         private List<Account> accounts = new List<Account>();
 
         private List<Customer> customers = new List<Customer>();
@@ -33,7 +31,7 @@ namespace OOPSummaryProject
 
         public string Address { get; }
 
-        public int CustomerCount { get; }
+        public int CustomerCount { get; private set; }
 
         public Customer GetCustomerById(int customerId) => customerById[customerId];
 
@@ -54,6 +52,7 @@ namespace OOPSummaryProject
             customerById.Add(customer.CustomerId, customer);
             customerByNumber.Add(customer.CustomerNumber, customer);
             accountsByCustomer.Add(customer, new List<Account>());
+            CustomerCount++;
         }
 
         public void OpenNewAccount(Account account, Customer customer)
@@ -62,7 +61,7 @@ namespace OOPSummaryProject
             {
                 throw new AccountAlreadyExistException();
             }
-            
+
             if (account.AccountOwner != customer)
             {
                 throw new NotSameCustomerException();
@@ -104,7 +103,7 @@ namespace OOPSummaryProject
                 account.Substract(amount);
                 totalMoneyBank -= amount;
             }
-            catch (BalanceException) 
+            catch (BalanceException)
             {
                 Console.WriteLine("Balance Exception");
             }
@@ -141,7 +140,7 @@ namespace OOPSummaryProject
 
         public void ChargeAnnualCommission(float percentage)
         {
-            if(percentage < 0 || percentage >= 100)
+            if (percentage < 0 || percentage >= 100)
             {
                 throw new ArgumentOutOfRangeException();
             }
@@ -164,7 +163,7 @@ namespace OOPSummaryProject
                     account.Substract(commission);
                     profits += commission;
                 }
-                catch (BalanceException) 
+                catch (BalanceException)
                 {
                     Console.WriteLine("Balance Exception");
                 }
@@ -173,7 +172,7 @@ namespace OOPSummaryProject
 
         public void JoinAccounts(Account account1, Account account2)
         {
-            if(account1 == account2)
+            if (account1 == account2)
             {
                 throw new AccountAlreadyExistException();
             }
@@ -189,9 +188,50 @@ namespace OOPSummaryProject
             CloseAccount(account2, account2.AccountOwner);
         }
 
-        public string XMLSerialize()
+        internal string XMLSerialize()
         {
-            return null;
+            string serializedCustomers = string.Empty;
+            customers.ForEach(customer => serializedCustomers += customer.XMLSerialize() + Environment.NewLine);
+            AddIndent(ref serializedCustomers, 8);
+
+            string serializedAccounts = string.Empty;
+            accounts.ForEach(account => serializedAccounts += account.XMLSerialize() + Environment.NewLine);
+            AddIndent(ref serializedAccounts, 8);
+
+            return $@"<bank>
+    <name>{Name}</name>
+    <address>{Address}</address>
+    <customer-count>{CustomerCount}</customer-count>
+    <total-money>{totalMoneyBank}</total-money>
+    <profits>{profits}</profits>
+    <customers>
+{serializedCustomers}
+    </customers>
+    <accounts>
+{serializedAccounts}
+    </accounts>
+</bank>";
+        }
+
+        private void AddIndent(ref string text, int indent)
+        {
+            string[] serializedCustomersArr = text.Trim().Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            text = string.Empty;
+
+            for (int i = 0; i < serializedCustomersArr.Length; i++)
+            {
+                for (int space = 0; space < indent; space++)
+                {
+                    text += " ";
+                }
+
+                text += serializedCustomersArr[i];
+
+                if (i < serializedCustomersArr.Length - 1)
+                { 
+                    text += Environment.NewLine;
+                } 
+            }
         }
     }
 }

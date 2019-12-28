@@ -1,4 +1,6 @@
-﻿namespace OOPSummaryProject
+﻿using System;
+
+namespace OOPSummaryProject
 {
     class Customer
     {
@@ -55,5 +57,15 @@
         public override bool Equals(object obj) => obj is Customer customer && CustomerNumber == customer.CustomerNumber;
 
         public override int GetHashCode() => CustomerNumber.GetHashCode();
+
+        internal string XMLSerialize()
+        {
+            return $@"<customer>
+    <customer-id>{CustomerId}</customer-id>
+    <customer-number>{CustomerNumber}</customer-number>
+    <name>{Name}</name>    
+    <ph-number>{PhNumber}</ph-number>
+</customer>";
+        }
     }
 }

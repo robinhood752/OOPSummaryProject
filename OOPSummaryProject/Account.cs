@@ -52,19 +52,24 @@ namespace OOPSummaryProject
 
         public void Add(int amount)
         {
+            if (Balance + amount < -Math.Abs(MaxMinusAllowed))
+            {
+                throw new BalanceException();
+            }
+
             Balance += amount;
         }
 
         public void Substract(int amount)
         {
-            if (Balance - amount < MaxMinusAllowed)
-            {
-                throw new BalanceException();
-            }
-
             Add(-amount);
         }
 
+        public override bool Equals(object obj) => obj is Account account && accountNumber == account.accountNumber;
+
+        public override int GetHashCode() => accountNumber.GetHashCode();
+
+        #region operator overloads
         public static bool operator ==(Account account1, Account account2)
         {
             if (account1 is null && account2 is null)
@@ -85,10 +90,6 @@ namespace OOPSummaryProject
         {
             return !(account1 == account2);
         }
-
-        public override bool Equals(object obj) => obj is Account account && accountNumber == account.accountNumber;
-
-        public override int GetHashCode() => accountNumber.GetHashCode();
 
         public static Account operator +(Account account1, Account account2)
         {
@@ -134,6 +135,16 @@ namespace OOPSummaryProject
             }
 
             return account;
+        }
+        #endregion
+
+        internal string XMLSerialize()
+        {
+            return $@"<account>
+    <account-number>{AccountNumber}</account-number>
+    <max-minus-allowed>{MaxMinusAllowed}</max-minus-allowed>
+    <account-owner>{AccountOwner.CustomerId}</account-owner>
+</account>";
         }
     }
 }
