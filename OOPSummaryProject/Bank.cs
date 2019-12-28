@@ -188,7 +188,7 @@ namespace OOPSummaryProject
             CloseAccount(account2, account2.AccountOwner);
         }
 
-        internal string XMLSerialize()
+        public string XMLSerialize()
         {
             string serializedCustomers = string.Empty;
             customers.ForEach(customer => serializedCustomers += customer.XMLSerialize() + Environment.NewLine);

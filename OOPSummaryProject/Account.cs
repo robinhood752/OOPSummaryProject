@@ -65,11 +65,13 @@ namespace OOPSummaryProject
             Add(-amount);
         }
 
+        #region equals/hash code
         public override bool Equals(object obj) => obj is Account account && accountNumber == account.accountNumber;
 
         public override int GetHashCode() => accountNumber.GetHashCode();
+        #endregion
 
-        #region operator overloads
+        #region operator overloading
         public static bool operator ==(Account account1, Account account2)
         {
             if (account1 is null && account2 is null)

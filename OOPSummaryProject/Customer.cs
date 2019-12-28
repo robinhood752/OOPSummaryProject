@@ -33,6 +33,13 @@ namespace OOPSummaryProject
             PhNumber = phNumber;
         }
 
+        #region equals/hash code
+        public override bool Equals(object obj) => obj is Customer customer && CustomerNumber == customer.CustomerNumber;
+
+        public override int GetHashCode() => CustomerNumber.GetHashCode();
+        #endregion
+
+        #region operators overloading
         public static bool operator ==(Customer customer1, Customer customer2)
         {
             if(customer1 is null && customer2 is null)
@@ -53,10 +60,7 @@ namespace OOPSummaryProject
         {
             return !(customer1 == customer2);
         }
-
-        public override bool Equals(object obj) => obj is Customer customer && CustomerNumber == customer.CustomerNumber;
-
-        public override int GetHashCode() => CustomerNumber.GetHashCode();
+        #endregion
 
         internal string XMLSerialize()
         {
